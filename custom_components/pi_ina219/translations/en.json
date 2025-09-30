@@ -1,0 +1,23 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure INA219 Power Monitor",
+        "description": "Set up your INA219 sensor to monitor current, voltage, and power.",
+        "data": {
+          "i2c_bus": "I2C Bus Number",
+          "i2c_address": "I2C Address (hex)",
+          "shunt_ohms": "Shunt Resistor Value (Ohms)",
+          "max_expected_amps": "Maximum Expected Current (Amps)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to INA219 sensor. Please check your I2C bus, address, and wiring.",
+      "unknown": "Unexpected error occurred"
+    },
+    "abort": {
+      "already_configured": "Device is already configured"
+    }
+  }
+}

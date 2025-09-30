@@ -1,0 +1,12 @@
+{
+  "domain": "pi_ina219",
+  "name": "INA219 Power Monitor",
+  "codeowners": ["@JoshuaLampert"],
+  "config_flow": true,
+  "documentation": "https://github.com/JoshuaLampert/homeassistant-pi_ina219",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/JoshuaLampert/homeassistant-pi_ina219/issues",
+  "requirements": ["pi-ina219==1.4.1"],
+  "version": "1.0.0"
+}
