@@ -28,13 +28,7 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 
-from .const import (
-    DOMAIN,
-    CONF_I2C_ADDRESS,
-    CONF_I2C_BUS,
-    CONF_SHUNT_OHMS,
-    CONF_MAX_EXPECTED_AMPS,
-)
+from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -47,23 +41,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up INA219 sensor from a config entry."""
-    i2c_bus = config_entry.data[CONF_I2C_BUS]
-    i2c_address = config_entry.data[CONF_I2C_ADDRESS]
-    shunt_ohms = config_entry.data[CONF_SHUNT_OHMS]
-    max_expected_amps = config_entry.data[CONF_MAX_EXPECTED_AMPS]
-
-    coordinator = INA219DataUpdateCoordinator(
-        hass,
-        i2c_bus=i2c_bus,
-        i2c_address=i2c_address,
-        shunt_ohms=shunt_ohms,
-        max_expected_amps=max_expected_amps,
-    )
-
-    await coordinator.async_config_entry_first_refresh()
-
-    # Store coordinator in runtime_data
-    config_entry.runtime_data = coordinator
+    coordinator: INA219DataUpdateCoordinator = config_entry.runtime_data
 
     entities = [
         INA219VoltageSensor(coordinator, config_entry),
