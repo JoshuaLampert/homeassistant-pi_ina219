@@ -1,0 +1,6 @@
+# Quality Scale tier for this integration
+# https://www.home-assistant.io/docs/quality_scale/
+
+# This integration meets the Bronze tier requirements
+integration: pi_ina219
+tier: bronze
