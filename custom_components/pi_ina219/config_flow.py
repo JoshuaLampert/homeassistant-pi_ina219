@@ -1,4 +1,5 @@
 """Config flow for INA219 Power Monitor integration."""
+
 from __future__ import annotations
 
 import logging
@@ -35,9 +36,9 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
         vol.Required(CONF_SHUNT_OHMS, default=DEFAULT_SHUNT_OHMS): vol.All(
             vol.Coerce(float), vol.Range(min=0.001, max=1.0)
         ),
-        vol.Required(CONF_MAX_EXPECTED_AMPS, default=DEFAULT_MAX_EXPECTED_AMPS): vol.All(
-            vol.Coerce(float), vol.Range(min=0.1, max=10.0)
-        ),
+        vol.Required(
+            CONF_MAX_EXPECTED_AMPS, default=DEFAULT_MAX_EXPECTED_AMPS
+        ): vol.All(vol.Coerce(float), vol.Range(min=0.1, max=10.0)),
     }
 )
 
@@ -79,7 +80,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     ) -> FlowResult:
         """Handle the initial step."""
         errors: dict[str, str] = {}
-        
+
         if user_input is not None:
             try:
                 info = await validate_input(self.hass, user_input)
@@ -94,7 +95,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     f"{user_input[CONF_I2C_BUS]}_{user_input[CONF_I2C_ADDRESS]}"
                 )
                 self._abort_if_unique_id_configured()
-                
+
                 return self.async_create_entry(title=info["title"], data=user_input)
 
         return self.async_show_form(

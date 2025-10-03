@@ -1,4 +1,5 @@
 """Sensor platform for INA219 Power Monitor."""
+
 from __future__ import annotations
 
 from datetime import timedelta
@@ -27,7 +28,13 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 
-from .const import DOMAIN, CONF_I2C_ADDRESS, CONF_I2C_BUS, CONF_SHUNT_OHMS, CONF_MAX_EXPECTED_AMPS
+from .const import (
+    DOMAIN,
+    CONF_I2C_ADDRESS,
+    CONF_I2C_BUS,
+    CONF_SHUNT_OHMS,
+    CONF_MAX_EXPECTED_AMPS,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -106,7 +113,7 @@ class INA219DataUpdateCoordinator(DataUpdateCoordinator[dict[str, float]]):
         """Fetch data from INA219 (runs in executor)."""
         try:
             self._init_sensor()
-            
+
             voltage = self._ina.voltage()
             current = self._ina.current() / 1000  # Convert mA to A
             power = self._ina.power() / 1000  # Convert mW to W
