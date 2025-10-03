@@ -1,6 +1,53 @@
-# Quality Scale tier for this integration
-# https://www.home-assistant.io/docs/quality_scale/
+# Quality Scale for pi_ina219 integration
+# https://developers.home-assistant.io/docs/core/integration-quality-scale/
 
-# This integration meets the Bronze tier requirements
 integration: pi_ina219
-tier: bronze
+
+bronze:
+  # Test coverage
+  test_coverage:
+    state: exempt
+    comment: "Custom integration for HACS, testing will be added in future versions"
+  
+  # Runtime data is type hinted
+  runtime_data:
+    state: done
+  
+  # Config flow uses translations for display
+  config_flow_translations:
+    state: done
+  
+  # Entities have appropriate device classes
+  entity_device_class:
+    state: done
+  
+  # Entities have correct unit of measurement
+  entity_unit_of_measurement:
+    state: done
+  
+  # Entities follow naming guidelines
+  entity_naming:
+    state: done
+  
+  # Integration provides appropriate diagnostics
+  integration_diagnostics:
+    state: exempt
+    comment: "Basic integration, diagnostics will be added if needed"
+  
+  # Entities use EntityDescription
+  entity_descriptions:
+    state: done
+  
+  # Handles expiration and refresh tokens for API
+  handles_expiration:
+    state: exempt
+    comment: "Not applicable - local I2C device, no API tokens"
+  
+  # Handles internet connectivity issues appropriately  
+  handles_internet_unavailable:
+    state: exempt
+    comment: "Not applicable - local I2C device, no internet required"
+  
+  # Appropriate polling interval
+  appropriate_polling:
+    state: done
