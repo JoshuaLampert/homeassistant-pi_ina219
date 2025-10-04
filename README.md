@@ -60,7 +60,29 @@ Home Assistant integration to measure current, voltage, and power with an INA219
 
 Home Assistant OS requires I2C to be enabled through the system configuration. There are several methods:
 
-#### Method 1: Using configuration.yaml (Recommended for newer HA OS versions)
+#### Method 1: Using HassOS I2C Configurator Add-on (Recommended)
+
+The easiest and most reliable method is to use the dedicated add-on:
+
+1. Install the **"HassOS I2C Configurator"** add-on:
+   - Add the repository: `https://github.com/adamoutler/HassOSConfigurator`
+   - Or search for "HassOS I2C Configurator" in the Community Add-on Store
+   - Install the add-on
+
+2. Start the add-on - it will automatically configure I2C
+
+3. Restart Home Assistant: Go to Settings → System → Restart
+
+4. Verify I2C is available using the **Terminal & SSH** or **Advanced SSH & Web Terminal** add-on:
+   ```bash
+   ls -l /dev/i2c*
+   i2cdetect -y 1
+   ```
+   You should see your device address (typically 0x40)
+
+**Note:** This add-on is specifically designed for Home Assistant OS and handles all the configuration automatically, including dealing with the correct config.txt path for your HA OS version.
+
+#### Method 2: Using configuration.yaml (May work on some HA OS versions)
 
 1. Add the following to your `configuration.yaml`:
    ```yaml
@@ -75,7 +97,7 @@ Home Assistant OS requires I2C to be enabled through the system configuration. T
    ls -l /dev/i2c*
    ```
 
-#### Method 2: Editing config.txt manually (if Method 1 doesn't work)
+#### Method 3: Editing config.txt manually (Advanced - if other methods don't work)
 
 1. Install the **File editor** add-on from the Add-on Store
 
@@ -148,13 +170,19 @@ If you're running Home Assistant OS and getting "Cannot Connect" errors:
 
 2. **Enable I2C on Home Assistant OS:**
    
-   **Method 1 (Recommended):** Add to `configuration.yaml`:
+   **Method 1 (Recommended):** Use the **HassOS I2C Configurator** add-on:
+   - Install from: `https://github.com/adamoutler/HassOSConfigurator`
+   - Start the add-on
+   - Restart Home Assistant
+   - The add-on handles everything automatically
+   
+   **Method 2:** Add to `configuration.yaml`:
    ```yaml
    hardware:
    ```
    Then restart Home Assistant.
    
-   **Method 2:** Edit config.txt manually:
+   **Method 3:** Edit config.txt manually (Advanced):
    - The location of `config.txt` varies by HA OS version
    - Try these locations: `/boot/config.txt`, `/mnt/boot/config.txt`, or `/mnt/data/supervisor/config.txt`
    - Use the Terminal add-on to check which exists: `ls -l /boot/config.txt /mnt/boot/config.txt`
