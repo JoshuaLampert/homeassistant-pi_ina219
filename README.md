@@ -222,26 +222,59 @@ If you've enabled I2C (you see `/dev/i2c-*` devices) but the integration still s
    - Look for errors mentioning "INA219" or "pi_ina219"
    - Common errors:
      - `Permission denied`: I2C device permissions issue (rare on HA OS)
+     - `[Errno 5] I/O error`: Sensor not responding - check hardware, address, or bus number
      - `Remote I/O error` or `No such device`: Sensor not detected on bus
      - `OSError: [Errno 16]`: Device address conflict or sensor not properly connected
 
-3. **Verify hardware connections:**
+3. **If you get "[Errno 5] I/O error"** - this is the most common issue:
+   
+   **First, try a different I2C bus:**
+   - The Raspberry Pi has multiple I2C buses
+   - Based on `i2cdetect -l` output, try these buses in order:
+     - Bus 1 (bcm2835 i2c@7e804000) - most common for GPIO pins
+     - Bus 22 (bcm2835 i2c@7e205000) - alternative bus
+     - Bus 0 or 10 (mux channels) - if sensor is on a multiplexer
+   - In the integration config, try bus **22** first, then bus **1**
+   
+   **Verify the I2C address:**
+   - Most INA219 modules use address **0x40** (decimal 64)
+   - Some modules use 0x41, 0x44, or 0x45
+   - Check your module documentation or try scanning:
+     ```bash
+     # Without sudo (as HA user):
+     i2cdetect -y 1
+     i2cdetect -y 22
+     ```
+   - If you get "Operation not permitted", that's normal for some buses - try the integration anyway
+   
+   **Check power connections first:**
+   - INA219 needs stable power to respond
+   - Verify VCC is connected to 3.3V or 5V (check module specs)
+   - Verify GND is connected
+   - The sensor should have power even if I2C communication fails
+
+4. **Verify hardware connections:**
    - VCC → 3.3V or 5V (check your INA219 module specifications)
    - GND → GND
    - SDA → GPIO 2 (Pin 3) on Raspberry Pi
    - SCL → GPIO 3 (Pin 5) on Raspberry Pi
    - Ensure connections are secure
 
-4. **Try different I2C bus:**
-   - Some Raspberry Pi models expose I2C on different buses
-   - Try bus 0 instead of bus 1 in the configuration (or vice versa)
+5. **Test with a simple I2C scan (if you have i2c-tools):**
+   ```bash
+   # Try all buses
+   i2cdetect -y 1
+   i2cdetect -y 22
+   i2cdetect -y 0
+   ```
+   Look for your sensor address in the output grid (usually 40 in hex)
 
-5. **Verify the sensor is working:**
-   - If you have `i2c-tools` installed: `i2cdetect -y 1` should show the address
+6. **Verify the sensor is working:**
    - The default address is 0x40 (decimal 64)
    - Some INA219 modules have address selection jumpers - verify they're set correctly
+   - Try a different I2C address in the integration config (0x41, 0x44, or 0x45)
 
-6. **Check if another process is using the sensor:**
+7. **Check if another process is using the sensor:**
    - Restart Home Assistant after changing I2C configuration
    - Make sure no other integrations are trying to use the same I2C address
 
