@@ -58,7 +58,9 @@ Home Assistant integration to measure current, voltage, and power with an INA219
 
 ### For Home Assistant OS
 
-Home Assistant OS requires I2C to be enabled through configuration:
+Home Assistant OS requires I2C to be enabled through the system configuration. There are several methods:
+
+#### Method 1: Using configuration.yaml (Recommended for newer HA OS versions)
 
 1. Add the following to your `configuration.yaml`:
    ```yaml
@@ -66,18 +68,40 @@ Home Assistant OS requires I2C to be enabled through configuration:
    hardware:
    ```
 
-2. Alternatively, you can enable I2C using the **Advanced SSH & Web Terminal** add-on:
-   - Install "Advanced SSH & Web Terminal" from the Add-on Store
-   - In the add-on configuration, enable "Protection mode: off"
-   - Start the add-on and open the terminal
-   - Run: `echo "dtparam=i2c_arm=on" >> /mnt/boot/config.txt`
-   - Reboot Home Assistant: `ha host reboot`
+2. Restart Home Assistant
 
-3. After reboot, verify I2C is available by checking if `/dev/i2c-1` exists:
-   - In the Advanced SSH terminal: `ls -l /dev/i2c*`
-
-4. Check if the INA219 is detected (from Advanced SSH terminal):
+3. Verify I2C is available using the **Terminal & SSH** or **Advanced SSH & Web Terminal** add-on:
    ```bash
+   ls -l /dev/i2c*
+   ```
+
+#### Method 2: Editing config.txt manually (if Method 1 doesn't work)
+
+1. Install the **File editor** add-on from the Add-on Store
+
+2. In the File editor, navigate to the `/config` directory
+
+3. Create or edit a file called `config.txt` in the root of your config directory with the following content:
+   ```
+   dtparam=i2c_arm=on
+   ```
+   
+4. Alternatively, use **Terminal & SSH** or **Advanced SSH & Web Terminal** add-on:
+   ```bash
+   # Check if config.txt exists in various possible locations
+   ls -l /boot/config.txt /mnt/boot/config.txt /mnt/data/supervisor/config.txt
+   
+   # Edit the file that exists (path may vary by HA OS version)
+   # If using /boot/config.txt:
+   echo "dtparam=i2c_arm=on" >> /boot/config.txt
+   
+   # Reboot
+   ha host reboot
+   ```
+
+5. After reboot, verify I2C is available:
+   ```bash
+   ls -l /dev/i2c*
    i2cdetect -y 1
    ```
    You should see your device address (typically 0x40)
@@ -118,17 +142,24 @@ The integration creates three sensors:
 If you're running Home Assistant OS and getting "Cannot Connect" errors:
 
 1. **Check if I2C is enabled:**
-   - Install "Advanced SSH & Web Terminal" add-on (disable Protection mode)
-   - Check for I2C device: `ls -l /dev/i2c*`
+   - Install **Terminal & SSH** or **Advanced SSH & Web Terminal** add-on
+   - Open the terminal and check for I2C device: `ls -l /dev/i2c*`
    - If no devices are listed, I2C is not enabled
 
 2. **Enable I2C on Home Assistant OS:**
-   - Method 1: Edit `/mnt/boot/config.txt` via Advanced SSH terminal:
-     ```bash
-     echo "dtparam=i2c_arm=on" >> /mnt/boot/config.txt
-     ha host reboot
-     ```
-   - Method 2: Use the Home Assistant File Editor add-on to edit `config.txt` on the boot partition
+   
+   **Method 1 (Recommended):** Add to `configuration.yaml`:
+   ```yaml
+   hardware:
+   ```
+   Then restart Home Assistant.
+   
+   **Method 2:** Edit config.txt manually:
+   - The location of `config.txt` varies by HA OS version
+   - Try these locations: `/boot/config.txt`, `/mnt/boot/config.txt`, or `/mnt/data/supervisor/config.txt`
+   - Use the Terminal add-on to check which exists: `ls -l /boot/config.txt /mnt/boot/config.txt`
+   - Edit the file that exists and add: `dtparam=i2c_arm=on`
+   - Reboot: `ha host reboot`
 
 3. **Verify the sensor is detected:**
    ```bash
