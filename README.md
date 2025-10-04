@@ -71,14 +71,25 @@ The easiest and most reliable method is to use the dedicated add-on:
 
 2. Start the add-on - it will automatically configure I2C
 
-3. Restart Home Assistant: Go to Settings → System → Restart
+3. **Important:** Reboot your Raspberry Pi twice (full reboot, not just Home Assistant restart):
+   - Go to Settings → System → Hardware → Reboot
+   - Wait for it to come back online, then reboot again
+   - This ensures I2C drivers are properly loaded
 
 4. Verify I2C is available using the **Terminal & SSH** or **Advanced SSH & Web Terminal** add-on:
    ```bash
    ls -l /dev/i2c*
+   ```
+   You should see devices like `/dev/i2c-0`, `/dev/i2c-1`, etc.
+
+5. **(Optional)** To check which address your INA219 uses, install `i2c-tools`:
+   ```bash
+   apk add i2c-tools
    i2cdetect -y 1
    ```
    You should see your device address (typically 0x40)
+   
+   **Note:** `i2cdetect` is not required for the integration to work - it's only for troubleshooting. If you see `/dev/i2c-*` devices in step 4, I2C is enabled and ready.
 
 **Note:** This add-on is specifically designed for Home Assistant OS and handles all the configuration automatically, including dealing with the correct config.txt path for your HA OS version.
 
@@ -189,11 +200,50 @@ If you're running Home Assistant OS and getting "Cannot Connect" errors:
    - Edit the file that exists and add: `dtparam=i2c_arm=on`
    - Reboot: `ha host reboot`
 
-3. **Verify the sensor is detected:**
+3. **Verify the sensor is detected (Optional troubleshooting):**
+   
+   If you want to check which I2C address your sensor is on, install `i2c-tools`:
    ```bash
+   apk add i2c-tools
    i2cdetect -y 1
    ```
    You should see your device address (typically 0x40 or 40)
+   
+   **Note:** This step is optional - the integration will work if `/dev/i2c-*` devices exist.
+
+### Integration Still Fails After Enabling I2C (Home Assistant OS)
+
+If you've enabled I2C (you see `/dev/i2c-*` devices) but the integration still shows "Cannot Connect":
+
+1. **Verify you rebooted twice** after running HassOS I2C Configurator (full reboot, not just HA restart)
+
+2. **Check detailed error logs:**
+   - Go to Settings → System → Logs
+   - Look for errors mentioning "INA219" or "pi_ina219"
+   - Common errors:
+     - `Permission denied`: I2C device permissions issue (rare on HA OS)
+     - `Remote I/O error` or `No such device`: Sensor not detected on bus
+     - `OSError: [Errno 16]`: Device address conflict or sensor not properly connected
+
+3. **Verify hardware connections:**
+   - VCC → 3.3V or 5V (check your INA219 module specifications)
+   - GND → GND
+   - SDA → GPIO 2 (Pin 3) on Raspberry Pi
+   - SCL → GPIO 3 (Pin 5) on Raspberry Pi
+   - Ensure connections are secure
+
+4. **Try different I2C bus:**
+   - Some Raspberry Pi models expose I2C on different buses
+   - Try bus 0 instead of bus 1 in the configuration (or vice versa)
+
+5. **Verify the sensor is working:**
+   - If you have `i2c-tools` installed: `i2cdetect -y 1` should show the address
+   - The default address is 0x40 (decimal 64)
+   - Some INA219 modules have address selection jumpers - verify they're set correctly
+
+6. **Check if another process is using the sensor:**
+   - Restart Home Assistant after changing I2C configuration
+   - Make sure no other integrations are trying to use the same I2C address
 
 ### I2C Permission Issues (Standard Raspberry Pi OS)
 
@@ -205,18 +255,16 @@ sudo usermod -a -G i2c homeassistant
 
 Then restart Home Assistant.
 
-### Cannot Connect Error
+### Cannot Connect Error (Quick Checklist)
 
-- **Home Assistant OS**: Verify I2C is enabled (see above)
+- **Home Assistant OS**: 
+  - Verify `/dev/i2c-*` devices exist: `ls -l /dev/i2c*`
+  - Rebooted twice after enabling I2C?
+  - See detailed troubleshooting section above
 - **Raspberry Pi OS**: Verify I2C is enabled: `sudo raspi-config`
-- Check the sensor is detected: `sudo i2cdetect -y 1` (or `i2cdetect -y 1` on HA OS)
-- Verify wiring connections:
-  - VCC → 3.3V or 5V (check your module specs)
-  - GND → GND
-  - SDA → GPIO 2 (Pin 3)
-  - SCL → GPIO 3 (Pin 5)
-- Check I2C address matches your configuration (default: 0x40)
-- Some INA219 modules have address selection jumpers - verify they're set correctly
+- **Hardware**: Check wiring connections (see detailed troubleshooting above)
+- **Address**: Verify I2C address matches your configuration (default: 0x40 / decimal 64)
+- **Logs**: Check Home Assistant logs for specific error messages
 
 ### Inaccurate Readings
 
