@@ -1,0 +1,7 @@
+{
+  "name": "INA219 Power Monitor",
+  "content_in_root": false,
+  "filename": "pi_ina219",
+  "render_readme": true,
+  "homeassistant": "2023.1.0"
+}

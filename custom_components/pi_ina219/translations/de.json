@@ -1,0 +1,23 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "INA219 Leistungsmonitor konfigurieren",
+        "description": "Richten Sie Ihren INA219-Sensor ein, um Strom, Spannung und Leistung zu überwachen.",
+        "data": {
+          "i2c_bus": "I2C-Busnummer",
+          "i2c_address": "I2C-Adresse (hex)",
+          "shunt_ohms": "Shunt-Widerstandswert (Ohm)",
+          "max_expected_amps": "Maximal erwarteter Strom (Ampere)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung zum INA219-Sensor fehlgeschlagen. Bitte überprüfen Sie Ihren I2C-Bus, die Adresse und die Verkabelung.",
+      "unknown": "Unerwarteter Fehler aufgetreten"
+    },
+    "abort": {
+      "already_configured": "Gerät ist bereits konfiguriert"
+    }
+  }
+}
