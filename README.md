@@ -11,7 +11,6 @@ Home Assistant integration to measure current, voltage, and power with an INA219
 - Measures power (W)
 - Easy configuration through the Home Assistant UI
 - Automatic updates every 30 seconds
-- HACS compatible
 
 ## Hardware Requirements
 
@@ -42,37 +41,17 @@ Home Assistant integration to measure current, voltage, and power with an INA219
 
 ## Configuration
 
-### For Standard Raspberry Pi OS
-
-1. Enable I2C on your Raspberry Pi:
-   ```bash
-   sudo raspi-config
-   # Navigate to: Interface Options -> I2C -> Enable
-   ```
-
-2. Verify your INA219 is detected:
-   ```bash
-   sudo i2cdetect -y 1
-   ```
-   You should see your device address (typically 0x40)
-
-### For Home Assistant OS
-
 Home Assistant OS requires I2C to be enabled through the system configuration. There are several methods:
-
-#### Method 1: Using HassOS I2C Configurator Add-on (Recommended)
-
 The easiest and most reliable method is to use the dedicated add-on:
 
 1. Install the **"HassOS I2C Configurator"** add-on:
-   - Add the repository: `https://github.com/adamoutler/HassOSConfigurator`
-   - Or search for "HassOS I2C Configurator" in the Community Add-on Store
+   - In the add-on store add the repository: `https://github.com/adamoutler/HassOSConfigurator`
    - Install the add-on
 
 2. Start the add-on - it will automatically configure I2C
 
 3. **Important:** Reboot your Raspberry Pi twice (full reboot, not just Home Assistant restart):
-   - Go to Settings → System → Hardware → Reboot
+   - Go to Developer Tools → Restart → Advanced Options → Reboot system
    - Wait for it to come back online, then reboot again
    - This ensures I2C drivers are properly loaded
 
@@ -80,76 +59,27 @@ The easiest and most reliable method is to use the dedicated add-on:
    ```bash
    ls -l /dev/i2c*
    ```
-   You should see devices like `/dev/i2c-0`, `/dev/i2c-1`, etc.
-
-5. **(Optional)** To check which address your INA219 uses, install `i2c-tools`:
-   ```bash
-   apk add i2c-tools
+   You should see devices like `/dev/i2c-0`, `/dev/i2c-1`, etc. Note: In a normal setup on a Raspberry Pi not
+   running Home Assistant OS, we would verify the INA219 is detected by running
+   ```
    i2cdetect -y 1
    ```
-   You should see your device address (typically 0x40)
-   
-   **Note:** `i2cdetect` is not required for the integration to work - it's only for troubleshooting. If you see `/dev/i2c-*` devices in step 4, I2C is enabled and ready.
+   This command returns the I2C Address if it is detected properly. However, on HomeAssistant OS, this would normally
+   give a permission error. But do not worry. The integration should work nevertheless.
 
-**Note:** This add-on is specifically designed for Home Assistant OS and handles all the configuration automatically, including dealing with the correct config.txt path for your HA OS version.
-
-#### Method 2: Using configuration.yaml (May work on some HA OS versions)
-
-1. Add the following to your `configuration.yaml`:
-   ```yaml
-   # Enable I2C
-   hardware:
-   ```
-
-2. Restart Home Assistant
-
-3. Verify I2C is available using the **Terminal & SSH** or **Advanced SSH & Web Terminal** add-on:
-   ```bash
-   ls -l /dev/i2c*
-   ```
-
-#### Method 3: Editing config.txt manually (Advanced - if other methods don't work)
-
-1. Install the **File editor** add-on from the Add-on Store
-
-2. In the File editor, navigate to the `/config` directory
-
-3. Create or edit a file called `config.txt` in the root of your config directory with the following content:
-   ```
-   dtparam=i2c_arm=on
-   ```
-   
-4. Alternatively, use **Terminal & SSH** or **Advanced SSH & Web Terminal** add-on:
-   ```bash
-   # Check if config.txt exists in various possible locations
-   ls -l /boot/config.txt /mnt/boot/config.txt /mnt/data/supervisor/config.txt
-   
-   # Edit the file that exists (path may vary by HA OS version)
-   # If using /boot/config.txt:
-   echo "dtparam=i2c_arm=on" >> /boot/config.txt
-   
-   # Reboot
-   ha host reboot
-   ```
-
-5. After reboot, verify I2C is available:
-   ```bash
-   ls -l /dev/i2c*
-   i2cdetect -y 1
-   ```
-   You should see your device address (typically 0x40)
+For more information and troubleshooting, see the [forum thread](https://community.home-assistant.io/t/add-on-hassos-i2c-configurator/264167).
 
 ### Adding the Integration
 
-3. Add the integration through the Home Assistant UI:
-   - Go to Settings -> Devices & Services
-   - Click "+ Add Integration"
-   - Search for "INA219 Power Monitor"
-   - Enter your configuration:
-     - **I2C Bus Number**: Usually `1` for Raspberry Pi
-     - **I2C Address**: Usually `0x40` (64 in decimal) - check with `i2cdetect`
-     - **Shunt Resistor Value**: Typically `0.1` ohms (check your module specifications)
-     - **Maximum Expected Current**: Maximum current you expect to measure (e.g., `3.2` amps)
+Add the integration through the Home Assistant UI:
+  - Go to Settings -> Devices & Services
+  - Click "+ Add Integration"
+  - Search for "INA219 Power Monitor"
+  - Enter your configuration:
+    - **I2C Bus Number**: Usually `1` for Raspberry Pi
+    - **I2C Address**: Usually `0x40` (64 in decimal)
+    - **Shunt Resistor Value**: Typically `0.1` ohms (check your module specifications)
+    - **Maximum Expected Current**: Maximum current you expect to measure (e.g., `3.2` amps)
 
 ## Configuration Parameters
 
@@ -174,50 +104,16 @@ The integration creates three sensors:
 
 If you're running Home Assistant OS and getting "Cannot Connect" errors:
 
-1. **Check if I2C is enabled:**
-   - Install **Terminal & SSH** or **Advanced SSH & Web Terminal** add-on
-   - Open the terminal and check for I2C device: `ls -l /dev/i2c*`
-   - If no devices are listed, I2C is not enabled
-
-2. **Enable I2C on Home Assistant OS:**
-   
-   **Method 1 (Recommended):** Use the **HassOS I2C Configurator** add-on:
-   - Install from: `https://github.com/adamoutler/HassOSConfigurator`
-   - Start the add-on
-   - Restart Home Assistant
-   - The add-on handles everything automatically
-   
-   **Method 2:** Add to `configuration.yaml`:
-   ```yaml
-   hardware:
-   ```
-   Then restart Home Assistant.
-   
-   **Method 3:** Edit config.txt manually (Advanced):
-   - The location of `config.txt` varies by HA OS version
-   - Try these locations: `/boot/config.txt`, `/mnt/boot/config.txt`, or `/mnt/data/supervisor/config.txt`
-   - Use the Terminal add-on to check which exists: `ls -l /boot/config.txt /mnt/boot/config.txt`
-   - Edit the file that exists and add: `dtparam=i2c_arm=on`
-   - Reboot: `ha host reboot`
-
-3. **Verify the sensor is detected (Optional troubleshooting):**
-   
-   If you want to check which I2C address your sensor is on, install `i2c-tools`:
-   ```bash
-   apk add i2c-tools
-   i2cdetect -y 1
-   ```
-   You should see your device address (typically 0x40 or 40)
-   
-   **Note:** This step is optional - the integration will work if `/dev/i2c-*` devices exist.
+**Check if I2C is enabled:**
+  - Install **Terminal & SSH** or **Advanced SSH & Web Terminal** add-on
+  - Open the terminal and check for I2C device: `ls -l /dev/i2c*`
+  - If no devices are listed, I2C is not enabled
 
 ### Integration Still Fails After Enabling I2C (Home Assistant OS)
 
 If you've enabled I2C (you see `/dev/i2c-*` devices) but the integration still shows "Cannot Connect":
 
-1. **Verify you rebooted twice** after running HassOS I2C Configurator (full reboot, not just HA restart)
-
-2. **Check detailed error logs:**
+1. **Check detailed error logs:**
    - Go to Settings → System → Logs
    - Look for errors mentioning "INA219" or "pi_ina219"
    - Common errors:
@@ -226,78 +122,21 @@ If you've enabled I2C (you see `/dev/i2c-*` devices) but the integration still s
      - `Remote I/O error` or `No such device`: Sensor not detected on bus
      - `OSError: [Errno 16]`: Device address conflict or sensor not properly connected
 
-3. **If you get "[Errno 5] I/O error"** - this is the most common issue:
-   
-   **First, try a different I2C bus:**
-   - The Raspberry Pi has multiple I2C buses
-   - Based on `i2cdetect -l` output, try these buses in order:
-     - Bus 1 (bcm2835 i2c@7e804000) - most common for GPIO pins
-     - Bus 22 (bcm2835 i2c@7e205000) - alternative bus
-     - Bus 0 or 10 (mux channels) - if sensor is on a multiplexer
-   - In the integration config, try bus **22** first, then bus **1**
-   
-   **Verify the I2C address:**
-   - Most INA219 modules use address **0x40** (decimal 64)
-   - Some modules use 0x41, 0x44, or 0x45
-   - Check your module documentation or try scanning:
-     ```bash
-     # Without sudo (as HA user):
-     i2cdetect -y 1
-     i2cdetect -y 22
-     ```
-   - If you get "Operation not permitted", that's normal for some buses - try the integration anyway
-   
-   **Check power connections first:**
-   - INA219 needs stable power to respond
-   - Verify VCC is connected to 3.3V or 5V (check module specs)
-   - Verify GND is connected
-   - The sensor should have power even if I2C communication fails
-
-4. **Verify hardware connections:**
+2. **Verify hardware connections:**
    - VCC → 3.3V or 5V (check your INA219 module specifications)
    - GND → GND
    - SDA → GPIO 2 (Pin 3) on Raspberry Pi
    - SCL → GPIO 3 (Pin 5) on Raspberry Pi
    - Ensure connections are secure
 
-5. **Test with a simple I2C scan (if you have i2c-tools):**
-   ```bash
-   # Try all buses
-   i2cdetect -y 1
-   i2cdetect -y 22
-   i2cdetect -y 0
-   ```
-   Look for your sensor address in the output grid (usually 40 in hex)
-
-6. **Verify the sensor is working:**
+3. **Verify the sensor is working:**
    - The default address is 0x40 (decimal 64)
    - Some INA219 modules have address selection jumpers - verify they're set correctly
    - Try a different I2C address in the integration config (0x41, 0x44, or 0x45)
 
-7. **Check if another process is using the sensor:**
+4. **Check if another process is using the sensor:**
    - Restart Home Assistant after changing I2C configuration
    - Make sure no other integrations are trying to use the same I2C address
-
-### I2C Permission Issues (Standard Raspberry Pi OS)
-
-If you get permission errors on standard Raspberry Pi OS, add the Home Assistant user to the i2c group:
-
-```bash
-sudo usermod -a -G i2c homeassistant
-```
-
-Then restart Home Assistant.
-
-### Cannot Connect Error (Quick Checklist)
-
-- **Home Assistant OS**: 
-  - Verify `/dev/i2c-*` devices exist: `ls -l /dev/i2c*`
-  - Rebooted twice after enabling I2C?
-  - See detailed troubleshooting section above
-- **Raspberry Pi OS**: Verify I2C is enabled: `sudo raspi-config`
-- **Hardware**: Check wiring connections (see detailed troubleshooting above)
-- **Address**: Verify I2C address matches your configuration (default: 0x40 / decimal 64)
-- **Logs**: Check Home Assistant logs for specific error messages
 
 ### Inaccurate Readings
 
@@ -305,35 +144,17 @@ Then restart Home Assistant.
 - Ensure the maximum expected current is set correctly
 - Check that your power supply is stable
 
-## Example Automation
-
-Monitor power consumption and send a notification:
-
-```yaml
-automation:
-  - alias: "High Power Alert"
-    trigger:
-      - platform: numeric_state
-        entity_id: sensor.ina219_power_monitor_power
-        above: 10
-    action:
-      - service: notify.notify
-        data:
-          message: "Power consumption is above 10W!"
-```
-
-## Development
-
-This integration uses the [pi-ina219](https://github.com/chrisb2/pi_ina219) Python library.
-
 ## Credits
 
-- Based on the [pi-ina219](https://github.com/chrisb2/pi_ina219) library by Chris Borrill
+- Based on the [pi-ina219](https://github.com/chrisb2/pi_ina219) Python library by Chris Borrill
 - INA219 chip by Texas Instruments
+- Please note that large parts of this integration are written by GitHub Copilot, see [this PR](https://github.com/JoshuaLampert/homeassistant-pi_ina219/pull/1).
+  I have checked the implementation and tested the integration though. However, I do not extend any warranty. Use at your own risk!
 
-## License
+## License and contributing
 
-This project is under the MIT License.
+This project is under the MIT License ((see [License](https://github.com/JoshuaLampert/homeassistant-pi_ina219/blob/main/LICENSE)).
+I am pleased to accept contributions from everyone, preferably in the form of a PR.
 
 ## Support
 
