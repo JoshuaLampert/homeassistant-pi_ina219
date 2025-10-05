@@ -3,7 +3,7 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-success.svg)](https://opensource.org/licenses/MIT)
 
-Home Assistant integration to measure current, voltage, and power with an INA219 sensor using the Python library `pi-ina219`.
+Home Assistant integration to measure current, voltage, and power with an [INA219 sensor](https://www.ti.com/lit/ds/symlink/ina219.pdf) from Texas Instruments using the Python library [pi-ina219](https://github.com/chrisb2/pi_ina219).
 
 ## Features
 
@@ -11,6 +11,7 @@ Home Assistant integration to measure current, voltage, and power with an INA219
 - Measures current (A)
 - Measures power (W)
 - Easy configuration through the Home Assistant UI
+- Automatically creates sensors
 - Automatic updates every 30 seconds
 
 ## Hardware Requirements
@@ -18,6 +19,8 @@ Home Assistant integration to measure current, voltage, and power with an INA219
 - Raspberry Pi or similar device running Home Assistant
 - INA219 current/power monitor module
 - I2C connection enabled on your device
+
+Especially, this means no ESP is required because the INA219 is directly wired to the Raspberry Pi running Home Assistant.
 
 ## Installation
 
@@ -65,7 +68,7 @@ The easiest and most reliable method is to use the dedicated add-on:
    ```
    i2cdetect -y 1
    ```
-   This command returns the I2C Address if it is detected properly. However, on HomeAssistant OS, this would normally
+   This command returns the I2C Address if it is detected properly. However, on Home Assistant OS, this would normally
    give a permission error. But do not worry. The integration should work nevertheless.
 
 For more information and troubleshooting, see the [forum thread](https://community.home-assistant.io/t/add-on-hassos-i2c-configurator/264167).
@@ -151,6 +154,12 @@ If you've enabled I2C (you see `/dev/i2c-*` devices) but the integration still s
 - INA219 chip by Texas Instruments
 - Please note that large parts of this integration are written by GitHub Copilot, see [this PR](https://github.com/JoshuaLampert/homeassistant-pi_ina219/pull/1).
   I have checked the implementation and tested the integration though. However, I do not extend any warranty. Use at your own risk!
+
+## Similar projects
+
+- [INA219 DC Current Sensor in ESP](https://esphome.io/components/sensor/ina219/): Also creates current, voltage, and power sensors, but via ESPHome, i.e. an additional ESP device is required.
+- [INA219 UPS hat integration](https://github.com/odya/hass-ina219-ups-hat): Home Assistant integration to monitor any INA219 based UPS hat
+- [HomeAssistant INA219 sensor](https://github.com/ochorocho/ina_sensor)
 
 ## License and contributing
 
