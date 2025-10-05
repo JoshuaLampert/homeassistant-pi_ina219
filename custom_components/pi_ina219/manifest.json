@@ -6,6 +6,6 @@
   "documentation": "https://www.home-assistant.io/integrations/pi_ina219",
   "integration_type": "device",
   "iot_class": "local_polling",
-  "quality_scale": "bronze",
-  "requirements": ["pi-ina219==1.4.1"]
+  "requirements": ["pi-ina219==1.4.1"],
+  "version": "0.1.0"
 }
