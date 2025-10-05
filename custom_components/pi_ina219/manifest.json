@@ -3,7 +3,7 @@
   "name": "INA219 Power Monitor",
   "codeowners": ["@JoshuaLampert"],
   "config_flow": true,
-  "documentation": "https://www.home-assistant.io/integrations/pi_ina219",
+  "documentation": "https://github.com/JoshuaLampert/homeassistant-pi_ina219",
   "integration_type": "device",
   "iot_class": "local_polling",
   "requirements": ["pi-ina219==1.4.1"],

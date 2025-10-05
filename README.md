@@ -1,6 +1,7 @@
 # INA219 Power Monitor for Home Assistant
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
+[![License: MIT](https://img.shields.io/badge/License-MIT-success.svg)](https://opensource.org/licenses/MIT)
 
 Home Assistant integration to measure current, voltage, and power with an INA219 sensor using the Python library `pi-ina219`.
 
@@ -153,7 +154,7 @@ If you've enabled I2C (you see `/dev/i2c-*` devices) but the integration still s
 
 ## License and contributing
 
-This project is under the MIT License ((see [License](https://github.com/JoshuaLampert/homeassistant-pi_ina219/blob/main/LICENSE)).
+This project is under the MIT License (see [License](https://github.com/JoshuaLampert/homeassistant-pi_ina219/blob/main/LICENSE)).
 I am pleased to accept contributions from everyone, preferably in the form of a PR.
 
 ## Support
