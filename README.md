@@ -27,7 +27,7 @@ Especially, this means no ESP is required because the INA219 is directly wired t
 ### HACS (Recommended)
 
 1. Add this repository to HACS as a custom repository:
-   - Go to HACS -> Integrations
+   - Go to HACS
    - Click the three dots in the top right corner
    - Select "Custom repositories"
    - Add `https://github.com/JoshuaLampert/homeassistant-pi_ina219` as an Integration
@@ -45,6 +45,8 @@ Especially, this means no ESP is required because the INA219 is directly wired t
 
 ## Configuration
 
+### Preparation
+
 Home Assistant OS requires I2C to be enabled through the system configuration. There are several methods:
 The easiest and most reliable method is to use the dedicated add-on:
 
@@ -52,7 +54,7 @@ The easiest and most reliable method is to use the dedicated add-on:
    - In the add-on store add the repository: `https://github.com/adamoutler/HassOSConfigurator`
    - Install the add-on
 
-2. Start the add-on - it will automatically configure I2C
+2. Start the add-on - it will automatically configure I2C. Check the logs to see if it was successful.
 
 3. **Important:** Reboot your Raspberry Pi twice (full reboot, not just Home Assistant restart):
    - Go to Developer Tools → Restart → Advanced Options → Reboot system
@@ -81,7 +83,7 @@ Add the integration through the Home Assistant UI:
   - Search for "INA219 Power Monitor"
   - Enter your configuration:
     - **I2C Bus Number**: Usually `1` for Raspberry Pi
-    - **I2C Address**: Usually `0x40` (64 in decimal)
+    - **I2C Address**: Usually `0x40` (64 in decimal), note that the slider accepts decimal values, so you have to translate the hex value to decimal
     - **Shunt Resistor Value**: Typically `0.1` ohms (check your module specifications)
     - **Maximum Expected Current**: Maximum current you expect to measure (e.g., `3.2` amps)
 
@@ -90,7 +92,7 @@ Add the integration through the Home Assistant UI:
 | Parameter | Description | Default | Range |
 |-----------|-------------|---------|-------|
 | I2C Bus Number | The I2C bus number | 1 | - |
-| I2C Address | The I2C address of the INA219 | 0x40 | 0x00-0x7F |
+| I2C Address | The I2C address of the INA219 | 0x40 | 0x00-0x7F (0-127 in decimal) |
 | Shunt Resistor Value | The value of the shunt resistor in ohms | 0.1 | 0.001-1.0 |
 | Maximum Expected Current | Maximum current in amps | 3.2 | 0.1-10.0 |
 
@@ -148,18 +150,21 @@ If you've enabled I2C (you see `/dev/i2c-*` devices) but the integration still s
 - Ensure the maximum expected current is set correctly
 - Check that your power supply is stable
 
-## Credits
-
-- Based on the [pi-ina219](https://github.com/chrisb2/pi_ina219) Python library by Chris Borrill
-- INA219 chip by Texas Instruments
-- Please note that large parts of this integration are written by GitHub Copilot, see [this PR](https://github.com/JoshuaLampert/homeassistant-pi_ina219/pull/1).
-  I have checked the implementation and tested the integration though. However, I do not extend any warranty. Use at your own risk!
-
 ## Similar projects
 
 - [INA219 DC Current Sensor in ESP](https://esphome.io/components/sensor/ina219/): Also creates current, voltage, and power sensors, but via ESPHome, i.e. an additional ESP device is required.
 - [INA219 UPS hat integration](https://github.com/odya/hass-ina219-ups-hat): Home Assistant integration to monitor any INA219 based UPS hat
 - [HomeAssistant INA219 sensor](https://github.com/ochorocho/ina_sensor)
+
+## Credits
+
+- Based on the [pi-ina219](https://github.com/chrisb2/pi_ina219) Python library by Chris Borrill
+- INA219 chip by Texas Instruments
+
+## Disclaimer
+
+Please note that large parts of this integration are written by GitHub Copilot, see [this PR](https://github.com/JoshuaLampert/homeassistant-pi_ina219/pull/1).
+I have checked the implementation and tested the integration though. However, I do not extend any warranty. Use at your own risk!
 
 ## License and contributing
 
@@ -168,4 +173,5 @@ I am pleased to accept contributions from everyone, preferably in the form of a 
 
 ## Support
 
-For issues, questions, or contributions, please visit the [GitHub repository](https://github.com/JoshuaLampert/homeassistant-pi_ina219/issues).
+For issues, questions, or contributions, please [open an issue](https://github.com/JoshuaLampert/homeassistant-pi_ina219/issues)
+or [create a pull request](https://github.com/JoshuaLampert/homeassistant-pi_ina219/pulls).
