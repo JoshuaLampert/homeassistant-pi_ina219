@@ -79,7 +79,7 @@ The easiest and most reliable method is to use the dedicated add-on:
    fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/community/aarch64/APKINDEX.tar.gz
    (1/1) Installing i2c-tools (4.3-r3)
    Executing busybox-1.37.0-r12.trigger
-   0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+        0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
    00:                         -- -- -- -- -- -- -- --
    10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
    20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
