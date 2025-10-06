@@ -66,12 +66,30 @@ The easiest and most reliable method is to use the dedicated add-on:
    ls -l /dev/i2c*
    ```
    You should see devices like `/dev/i2c-0`, `/dev/i2c-1`, etc. Note: In a normal setup on a Raspberry Pi not
-   running Home Assistant OS, we would verify the INA219 is detected by running
+   running Home Assistant OS, we would verify the INA219 is detected at bus number 1 by running
    ```
    i2cdetect -y 1
    ```
    This command returns the I2C Address if it is detected properly. However, on Home Assistant OS, this would normally
-   give a permission error. But do not worry. The integration should work nevertheless.
+   give a permission error. But if you disable the protection-mode in the SSH add-on, you can execute `i2cdetect` in a
+   docker container like this:
+   ```sh
+   ➜  ~ docker exec -it homeassistant bash -c "apk add i2c-tools && i2cdetect -y 1"
+   fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/main/aarch64/APKINDEX.tar.gz
+   fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/community/aarch64/APKINDEX.tar.gz
+   (1/1) Installing i2c-tools (4.3-r3)
+   Executing busybox-1.37.0-r12.trigger
+   0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+   00:                         -- -- -- -- -- -- -- --
+   10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+   20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+   30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+   40: 40 -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+   50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+   60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+   70: -- -- -- -- -- -- -- --
+   ```
+   This tells you that at bus number `1` a device at address `0x40` is detected.
 
 For more information and troubleshooting, see the [forum thread](https://community.home-assistant.io/t/add-on-hassos-i2c-configurator/264167).
 
