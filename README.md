@@ -7,9 +7,7 @@ Home Assistant integration to measure current, voltage, and power with an [INA21
 
 ## Features
 
-- Measures voltage (V)
-- Measures current (A)
-- Measures power (W)
+- Measures voltage (V), current (A), and power (W)
 - Easy configuration through the Home Assistant UI
 - Automatically creates sensors
 - Automatic updates every 30 seconds
@@ -54,7 +52,7 @@ The easiest and most reliable method is to use the dedicated add-on:
    - In the add-on store add the repository: `https://github.com/adamoutler/HassOSConfigurator`
    - Install the add-on
 
-2. Start the add-on - it will automatically configure I2C. Check the logs to see if it was successful.
+2. Start the add-on **"HassOS I2C Configurator"** - it will automatically configure I2C. Check the logs to see if it was successful.
 
 3. **Important:** Reboot your Raspberry Pi twice (full reboot, not just Home Assistant restart):
    - Go to Developer Tools → Restart → Advanced Options → Reboot system
@@ -141,7 +139,6 @@ If you've enabled I2C (you see `/dev/i2c-*` devices) but the integration still s
    - Go to Settings → System → Logs
    - Look for errors mentioning "INA219" or "pi_ina219"
    - Common errors:
-     - `Permission denied`: I2C device permissions issue (rare on HA OS)
      - `[Errno 5] I/O error`: Sensor not responding - check hardware, address, or bus number
      - `Remote I/O error` or `No such device`: Sensor not detected on bus
      - `OSError: [Errno 16]`: Device address conflict or sensor not properly connected
