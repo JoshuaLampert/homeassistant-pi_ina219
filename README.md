@@ -3,7 +3,7 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-success.svg)](https://opensource.org/licenses/MIT)
 
-Home Assistant integration to measure current, voltage, and power with an [INA219 sensor](https://www.ti.com/lit/ds/symlink/ina219.pdf) from Texas Instruments using the Python library [pi-ina219](https://github.com/chrisb2/pi_ina219).
+Home Assistant integration to measure current, voltage, and power with an [INA219 sensor](https://www.ti.com/lit/ds/symlink/ina219.pdf) from Texas Instruments on a Raspberry Pi using the Python library [pi-ina219](https://github.com/chrisb2/pi_ina219).
 
 ## Features
 
@@ -103,6 +103,8 @@ Add the integration through the Home Assistant UI:
     - **Shunt Resistor Value**: Typically `0.1` ohms (check your module specifications)
     - **Maximum Expected Current**: Maximum current you expect to measure (e.g., `3.2` amps)
 
+Different INA219 devices can be used if they are configured to have different I2C addresses. For details refer to the [documentation](https://learn.adafruit.com/adafruit-ina219-current-sensor-breakout/assembly#addressing-the-boards-2973533) or the [manual](https://www.ti.com/lit/ds/symlink/ina219.pdf).
+
 ## Configuration Parameters
 
 | Parameter | Description | Default | Range |
@@ -167,9 +169,10 @@ If you've enabled I2C (you see `/dev/i2c-*` devices) but the integration still s
 
 ## Similar projects
 
-- [INA219 DC Current Sensor in ESP](https://esphome.io/components/sensor/ina219/): Also creates current, voltage, and power sensors, but via ESPHome, i.e. an additional ESP device is required.
+- [INA219 DC Current Sensor in ESP](https://esphome.io/components/sensor/ina219/): Also creates current, voltage, and power sensors, but via ESPHome, i.e. an additional ESP device is required
 - [INA219 UPS hat integration](https://github.com/odya/hass-ina219-ups-hat): Home Assistant integration to monitor any INA219 based UPS hat
 - [HomeAssistant INA219 sensor](https://github.com/ochorocho/ina_sensor)
+- [INA3221 Power Monitor](https://github.com/JoshuaLampert/homeassistant-pi_ina3221): Similar integration, but using the INA3221 device
 
 ## Credits
 
