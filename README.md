@@ -24,6 +24,8 @@ Especially, this means no ESP is required because the INA219 is directly wired t
 
 ### HACS (Recommended)
 
+[![Open your Home Assistant instance and show an integration.](https://my.home-assistant.io/badges/integration.svg)](https://my.home-assistant.io/redirect/integration/?domain=pi_ina219)
+
 1. Add this repository to HACS as a custom repository:
    - Go to HACS
    - Click the three dots in the top right corner
