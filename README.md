@@ -48,20 +48,20 @@ Especially, this means no ESP is required because the INA219 is directly wired t
 ### Preparation
 
 Home Assistant OS requires I2C to be enabled through the system configuration. There are several methods:
-The easiest and most reliable method is to use the dedicated add-on:
+The easiest and most reliable method is to use the dedicated app (formerly know as add-on):
 
-1. Install the **"HassOS I2C Configurator"** add-on:
-   - In the add-on store add the repository: `https://github.com/adamoutler/HassOSConfigurator`
-   - Install the add-on
+1. Install the **"HassOS I2C Configurator"** app:
+   - In the app-store (formerly known as add-on store) add the repository: `https://github.com/adamoutler/HassOSConfigurator`
+   - Install the app
 
-2. Start the add-on **"HassOS I2C Configurator"** - it will automatically configure I2C. Check the logs to see if it was successful.
+2. Start the app **"HassOS I2C Configurator"** - it will automatically configure I2C. Check the logs to see if it was successful.
 
 3. **Important:** Reboot your Raspberry Pi twice (full reboot, not just Home Assistant restart):
    - Go to Developer Tools → Restart → Advanced Options → Reboot system
    - Wait for it to come back online, then reboot again
    - This ensures I2C drivers are properly loaded
 
-4. Verify I2C is available using the **Terminal & SSH** or **Advanced SSH & Web Terminal** add-on:
+4. Verify I2C is available using the **Terminal & SSH** or **Advanced SSH & Web Terminal** app:
    ```bash
    ls -l /dev/i2c*
    ```
@@ -71,7 +71,7 @@ The easiest and most reliable method is to use the dedicated add-on:
    i2cdetect -y 1
    ```
    This command returns the I2C Address if it is detected properly. However, on Home Assistant OS, this would normally
-   give a permission error. But if you disable the protection-mode in the SSH add-on, you can execute `i2cdetect` in a
+   give a permission error. But if you disable the protection-mode in the SSH app, you can execute `i2cdetect` in a
    docker container like this:
    ```sh
    ➜  ~ docker exec -it homeassistant bash -c "apk add i2c-tools && i2cdetect -y 1"
@@ -131,7 +131,7 @@ The integration creates three sensors:
 If you're running Home Assistant OS and getting "Cannot Connect" errors:
 
 **Check if I2C is enabled:**
-  - Install **Terminal & SSH** or **Advanced SSH & Web Terminal** add-on
+  - Install **Terminal & SSH** or **Advanced SSH & Web Terminal** app
   - Open the terminal and check for I2C device: `ls -l /dev/i2c*`
   - If no devices are listed, I2C is not enabled
 
